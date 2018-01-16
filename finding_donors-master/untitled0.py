@@ -83,7 +83,7 @@ display(features_raw.head(n = 10))
 features = pd.get_dummies(features_raw)
 
 # TODO：将'income_raw'编码成数字值
-income = pd.get_dummies(income_raw)
+income = income_raw.map(lambda x: 1 if x == '>50K' else 0)
 
 # 打印经过独热编码之后的特征数量
 encoded = list(features.columns)
@@ -203,13 +203,14 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn import neighbors
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
+from sklearn.tree import DecisionTreeRegressor
 
 # TODO：初始化三个模型
 clf_A = LinearSVC(random_state=0)  # GaussianNB() #svm.SVC(random_state = 0)
 clf_B = LinearSVC(random_state=0)  #GaussianNB() # svm.SVC(random_state = 0) #GaussianNB()
-clf_C = LinearSVC(random_state=0)  #GaussianNB() #svm.SVC(random_state = 0) #neighbors.KNeighborsClassifier()
+#clf_C = LinearSVC(random_state=0)  #GaussianNB() #svm.SVC(random_state = 0) #neighbors.KNeighborsClassifier()
 # logit_clf = LogisticRegression(penalty='l2')
- 
+clf_C = DecisionTreeRegressor(random_state=5)
     
 print  X_train.shape[0]
  
@@ -235,3 +236,4 @@ for clf in [clf_A, clf_B, clf_C]:
 
 # 对选择的三个模型得到的评价结果进行可视化
 vs.evaluate(results, accuracy, fscore)
+
