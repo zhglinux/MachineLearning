@@ -55,8 +55,19 @@ class LearningAgent(Agent):
         ########### 
         ## TO DO ##
         ###########
-        # Set 'state' as a tuple of relevant data for the agent        
-        state = None
+        # Set 'state' as a tuple of relevant data for the agent
+
+        print("inputs==>{}").format(inputs)
+
+        #print(inputs.items())
+        state = (waypoint, inputs["light"], inputs["oncoming"], inputs["right"], inputs["left"])
+        print(state)
+
+        #for item in inputs:
+        #    print(item)
+        #     if inputs[item] is None:
+        #         state = state + ""
+
 
         return state
 
@@ -84,6 +95,18 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
+        print(" ---->>>----")
+        print("{}").format(state)
+        if self.learning == True:
+            for item in state:
+                print(item)
+                if self.Q.has_key(item):
+                    print ("---has key----")
+                    for key in self.Q:
+                        self.Q[item] = 0.0
+                else:
+                    print ("----else---")
+                    self.Q[item] = dict()
 
         return
 
@@ -103,6 +126,11 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
+
+        if self.learning == False:
+            index = random.randint(0,3)
+            print("index = {}").format(index)
+            action = self.valid_actions[index]
  
         return action
 
@@ -145,7 +173,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment()
+    env = Environment(verbose=True, num_dummies=10, grid_size=(8,4))
     
     ##############
     # Create the driving agent
@@ -153,13 +181,15 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent)
+    agent = env.create_agent(LearningAgent, learning=True)
     
     ##############
     # Follow the driving agent
     # Flags:
     #   enforce_deadline - set to True to enforce a deadline metric
-    env.set_primary_agent(agent)
+
+    #env.set_primary_agent(agent, enforce_deadline=True)
+    env.set_primary_agent(agent, enforce_deadline=True)
 
     ##############
     # Create the simulation
@@ -168,14 +198,16 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env)
-    
+
+    #sim = Simulator(env, update_delay=0.01,  display=False, log_metrics=True)
+    sim = Simulator(env, update_delay=0.01,  display=False, log_metrics=True)
+
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run()
+    sim.run(n_test=10)
 
 
 if __name__ == '__main__':
