@@ -40,6 +40,13 @@ class LearningAgent(Agent):
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
 
+        if testing == True:
+            self.epsilon = 0
+            self.alpha = 0
+        else:
+            self.epsilon = self.epsilon-0.01
+
+
         return None
 
     def build_state(self):
@@ -81,9 +88,15 @@ class LearningAgent(Agent):
         ###########
         # Calculate the maximum Q-value of all actions for a given state
 
-        maxQ = None
+        val = 0.0
+        for item in self.valid_actions:
+            val = max(val, self.Q[state][item])
 
-        return maxQ 
+        print("max val{}").format(val)
+
+        maxQ = self.Q[state][val]
+
+        return maxQ
 
 
     def createQ(self, state):
@@ -98,15 +111,12 @@ class LearningAgent(Agent):
         print(" ---->>>----")
         print("{}").format(state)
         if self.learning == True:
-            for item in state:
-                print(item)
-                if self.Q.has_key(item):
-                    print ("---has key----")
-                    for key in self.Q:
-                        self.Q[item] = 0.0
-                else:
-                    print ("----else---")
-                    self.Q[item] = dict()
+            if self.Q.has_key(state):
+                print ("---has key----")
+
+            else:
+                print ("----else---")
+                self.Q[state] = {None: 0.0, 'right': 0.0, 'left': 0.0, 'forward': 0.0}
 
         return
 
@@ -131,7 +141,15 @@ class LearningAgent(Agent):
             index = random.randint(0,3)
             print("index = {}").format(index)
             action = self.valid_actions[index]
- 
+        if self.learning == True:
+            if self.epsilon > 0.001:
+                index = random.randint(0, 3)
+                print("index = {}").format(index)
+                action = self.valid_actions[index]
+            else:
+                #
+                print("-xxxee-->")
+        print("actiono = {}").format(action)
         return action
 
 
@@ -145,6 +163,15 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
+
+        print("---reward--{}").format(reward)
+
+        if self.learning == True:
+            print("{}").format(state)
+            print("{}").format(self.Q[state])
+            print("{}").format(self.Q[state][action])
+
+            self.Q[state][action] = (1-self.alpha)*self.Q[state][action]+self.alpha*(reward+0)
 
         return
 
@@ -173,8 +200,10 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment(verbose=True, num_dummies=10, grid_size=(8,4))
-    
+    #env = Environment(verbose=True, num_dummies=100, grid_size=(8,4))
+
+    env = Environment(verbose=True)
+
     ##############
     # Create the driving agent
     # Flags:

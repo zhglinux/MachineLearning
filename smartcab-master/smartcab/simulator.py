@@ -98,6 +98,8 @@ class Simulator(object):
                 else: 
                     self.log_filename = os.path.join("logs", "sim_default-learning.csv")
                     self.table_filename = os.path.join("logs","sim_default-learning.txt")
+                    print(os.path.join("logs","kkk"))
+                    print("==>"+self.table_filename)
 
                 self.table_file = open(self.table_filename, 'wb')
             else:
