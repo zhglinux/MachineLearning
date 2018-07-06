@@ -48,7 +48,7 @@ class LearningAgent(Agent):
             #self.epsilon = self.epsilon-0.01
 
             #self.epsilon = 1/(self.testNumber*self.testNumber)
-            self.epsilon = math.exp(-0.01*self.testNumber)
+            self.epsilon = math.exp(-0.001*self.testNumber)
             #self.epsilon = math.cos(0.123*self.testNumber)
             self.testNumber += 1
 
@@ -141,13 +141,13 @@ class LearningAgent(Agent):
             else:
                 maxQ = self.get_maxQ(state)
 
-                #max_keys = [k for k, v in self.Q[state].items() if v == maxQ]
-                #action = max_keys[random.randint(0, len(max_keys) - 1)]#random.randint(a, b), 12 <= n <= 20
-                result = []
-                for (key, value) in self.Q[state].items():
-                    if value == maxQ:
-                        result.append(key)
-                action = random.choice(result)
+                max_keys = [k for k, v in self.Q[state].items() if v == maxQ]
+                action = max_keys[random.randint(0, len(max_keys) - 1)]#random.randint(a, b), a <= n <= b
+                #result = []
+                #for (key, value) in self.Q[state].items():
+                #    if value == maxQ:
+                #        result.append(key)
+                #action = result[random.randint(0, len(result) - 1)]
 
         return action
 
