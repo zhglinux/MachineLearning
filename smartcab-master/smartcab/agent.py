@@ -48,7 +48,7 @@ class LearningAgent(Agent):
             #self.epsilon = self.epsilon-0.01
 
             #self.epsilon = 1/(self.testNumber*self.testNumber)
-            self.epsilon = math.exp(-0.001*self.testNumber)
+            self.epsilon = math.exp(-0.001*self.testNumber)#-0.01, 300 , 0.001: 3000
             #self.epsilon = math.cos(0.123*self.testNumber)
             self.testNumber += 1
 
